@@ -1,0 +1,37 @@
+  tasks:
+
+    - name: "Add host"
+
+      infoblox:
+
+        server: "{{ infoblox_server }}"
+
+        username: "{{ infoblox_username }}"
+
+        password: "{{ infoblox_password }}"
+
+        action: add_host
+
+        dns_view: "{{ infoblox_dns_view }}"
+
+        net_view: "{{ infoblox_net_view }}"
+
+        network: 10.10.0.0/24
+
+        host: test123456788.test.com
+
+        api_version: "{{ infoblox_api_version }}"
+
+      delegate_to: localhost   
+
+      register: response
+
+     
+
+    - name: "Print Response"
+
+      debug:
+
+        var: response
+
+        
