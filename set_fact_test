@@ -1,0 +1,92 @@
+---
+- name: "Add host record to Infoblox"
+  hosts: localhost
+  gather_facts: false
+  become: false
+#  vars_files:
+#    - vars/infoblox_vars.yml
+
+  tasks:
+    #- name: "Add host"
+    #  infoblox:
+    #    server: "{{ infoblox_server }}"
+    #    username: "{{ infoblox_username }}"
+    #    password: "{{ infoblox_password }}"
+    #    action: add_host
+    #    dns_view: "{{ infoblox_dns_view }}"
+    #    net_view: "{{ infoblox_net_view }}"
+    #    network: 10.10.0.0/24
+    #    host: test123456788.test.com
+    #    api_version: "{{ infoblox_api_version }}"
+    #  delegate_to: localhost
+    #  register: response
+
+###
+# TEST CODE TO MANUALLY LOAD JSON RESULT FROM
+# "playbook output" FILE
+###
+
+    - name: Setting Test Response
+      set_fact:
+        response: '{
+    "changed": true,
+    "result": [
+        {
+            "_ref": "record:host/ZG5zLmhvc3QkLjcuY29tLnhvbS50ZXN0MTIzNDU2Nzg3:test123456787.test.com/Internal",
+            "comment": "Object managed by ansible-infoblox module",
+            "extattrs": {},
+            "ipv4addrs": [
+                {
+                    "_ref": "record:host_ipv4addr/ZG5zLmhvc3RfYWRkcmVzcyQuNy5jb20ueG9tLnRlc3QxMjM0NTY3ODcuMTAuMTQ3LjI1Mi4yLg:10.147.252.2/test123456787.xom.com/Internal",
+                    "configure_for_dhcp": false,
+                    "host": "test123456787.test.com",
+                    "ipv4addr": "10.10.0.2"
+                }
+            ],
+            "name": "test123456787.test.com",
+            "view": "Internal"
+        }
+    ]
+}'
+
+    ###'
+    # WE ARE DOING THIS BECAUSE WE NEED TO CONVERT THE MANUAL
+    # VARIABLE ABOVE. YOU WOULD NOT NEED TO DO THIS SECTION
+    # WHEN INTERFACING WITH THE VAR FROM THE OUTPUT OF THE MODULE!
+    ###
+
+    - name: Setting Test Response
+      set_fact:
+        response: "{{ response | from_json }}"
+
+    - name: Setting Test Response
+      set_fact:
+        response: "{{ response | combine(response) }}"
+
+###
+# END TEST CODE
+###
+
+    - name: Print Response
+      debug:
+        var: response
+
+    ###
+    # BELOW IS AN EXAMPLE OF HOW WE WOULD EXTRACT THE VARS
+    # FROM THE "response" VAR RETURNED FROM THE INFOBLOX MODULE
+    ###
+
+    - name: Setting fact for response values
+      set_fact:
+        infoblox_info:
+          comment:         "{{ response.result[0].comment }}"
+          ipv4addr:        "{{ response.result[0].ipv4addrs[0].ipv4addr }}"
+          hostname:        "{{ response.result[0].ipv4addrs[0].host }}"
+          dhcp_configured: "{{ response.result[0].ipv4addrs[0].configure_for_dhcp }}"
+
+    - name: Printing the variables back to be sure
+      debug: var=infoblox_info
+    - debug: var=infoblox_info.comment
+    - debug: var=infoblox_info.ipv4addr
+    - debug: var=infoblox_info.hostname
+    - debug: var=infoblox_info.dhcp_configured
