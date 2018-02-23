@@ -1,3 +1,25 @@
+This was the code in the infoblox.py module
+```
+ def create_host_record(self, host, address, network_ref=None, comment=None, ttl=None, extattrs=None):
+ ...<snip>...
+        model = {_NAME_PROPERTY: host, _IPV4_ADDRESS_PROPERTY: [{_IPV4_ADDRESS_PROPERTY: address}],
+                 _VIEW_PROPERTY: self.dns_view,
+                 _COMMENT_PROPERTY: comment, _EXT_ATTR_PROPERTY: extattrs}
+...<snip>...
+```
+
+The variable '_IPV4_ADDRESS = "ipv4addrs"' was added at line 164
+```
+163 _VIEW_PROPERTY = "view"
+164 _IPV4_ADDRESS = "ipv4addrs"
+165 _IPV4_ADDRESS_PROPERTY = "ipv4addr"
+166 _IPV6_ADDRESS_PROPERTY = "ipv6addr"
+```
+
+
+
+
+
 # ansible-infoblox
 Awesome infobox module for ansible
 
