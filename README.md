@@ -8,7 +8,7 @@ This was the code in the infoblox.py module
 ...<snip>...
 ```
 
-The variable '_IPV4_ADDRESS = "ipv4addrs"' was added at line 164
+The variable `_IPV4_ADDRESS = "ipv4addrs"` was added at line 164
 ```
 163 _VIEW_PROPERTY = "view"
 164 _IPV4_ADDRESS = "ipv4addrs"
